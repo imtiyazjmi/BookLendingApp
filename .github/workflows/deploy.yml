@@ -42,3 +42,6 @@ jobs:
             --function-name MyLambdaFunction \
             --s3-bucket lambda-deployment-565393029483-us-east-1 \
             --s3-key lambda-function.zip
+          aws lambda update-function-configuration \
+            --function-name MyLambdaFunction \
+            --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync"
