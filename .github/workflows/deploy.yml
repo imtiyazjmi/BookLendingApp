@@ -29,6 +29,6 @@ jobs:
       - name: Update Lambda function
         run: |
           aws lambda update-function-code \
-            --function-name myLambdaFunction \
+            --function-name MyLambdaFunction \
             --s3-bucket lambda-deployment-565393029483-us-east-1 \
             --s3-key lambda-function.zip
