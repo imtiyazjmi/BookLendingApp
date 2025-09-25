@@ -6,6 +6,7 @@ public class LambdaEntryPoint : APIGatewayProxyFunction
 {
     protected override void Init(IWebHostBuilder builder)
     {
-        builder.UseStartup<Startup>();
+        builder.UseContentRoot(Directory.GetCurrentDirectory())
+               .UseStartup<Startup>();
     }
 }

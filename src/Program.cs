@@ -6,60 +6,87 @@ using BookLendingApp.Interfaces;
 using Amazon.SimpleSystemsManagement;
 using Amazon.Extensions.NETCore.Setup;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace BookLendingApp;
 
-// Add services to the container.
-builder.Services.AddControllers();
-
-// Configure database
-var useSSM = builder.Configuration.GetValue<bool>("UseSSM");
-if (useSSM)
+public class Program
 {
-    builder.Services.AddAWSService<IAmazonSimpleSystemsManagement>();
-    builder.Services.AddSingleton<ParameterStoreService>();
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }
 
-builder.Services.AddSingleton<DatabaseConfigurationService>();
-
-builder.Services.AddDbContext<BookContext>((serviceProvider, options) =>
+public class Startup
 {
-    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var useSSM = configuration.GetValue<bool>("UseSSM");
-    
-    string connectionString;
-    if (useSSM)
+    public IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration)
     {
-        // For Lambda, use environment variables when SSM is enabled
-        var host = Environment.GetEnvironmentVariable("POSTGRESQL_HOST") ?? "localhost";
-        var database = Environment.GetEnvironmentVariable("POSTGRESQL_DATABASE") ?? "booklendingdb";
-        var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
-        var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
-        connectionString = $"Host={host};Database={database};Username={username};Password={password}";
+        Configuration = configuration;
     }
-    else
+
+    public void ConfigureServices(IServiceCollection services)
     {
-        var pgSettings = configuration.GetSection("PostgreSQL").Get<PostgreSqlSettings>();
-        connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
+        services.AddControllers();
+
+        var useSSM = Configuration.GetValue<bool>("UseSSM");
+        if (useSSM)
+        {
+            services.AddAWSService<IAmazonSimpleSystemsManagement>();
+            services.AddSingleton<ParameterStoreService>();
+        }
+
+        services.AddSingleton<DatabaseConfigurationService>();
+
+        services.AddDbContext<BookContext>((serviceProvider, options) =>
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var useSSM = configuration.GetValue<bool>("UseSSM");
+            
+            string connectionString;
+            if (useSSM)
+            {
+                var host = Environment.GetEnvironmentVariable("POSTGRESQL_HOST") ?? "localhost";
+                var database = Environment.GetEnvironmentVariable("POSTGRESQL_DATABASE") ?? "booklendingdb";
+                var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
+                var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
+                connectionString = $"Host={host};Database={database};Username={username};Password={password}";
+            }
+            else
+            {
+                var pgSettings = configuration.GetSection("PostgreSQL").Get<PostgreSqlSettings>();
+                connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
+            }
+            
+            options.UseNpgsql(connectionString);
+        });
+
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IBookService, BookService>();
     }
-    
-    options.UseNpgsql(connectionString);
-});
 
-// Register services
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IBookService, BookService>();
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
 
-// Add AWS Lambda support. When application is run in Lambda Kestrel is swapped out as the web server with Amazon.Lambda.AspNetCoreServer. This
-// package will act as the webserver translating request and responses between the Lambda event source and ASP.NET Core.
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
-
-var app = builder.Build();
-
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.MapGet("/", () => "Welcome to running ASP.NET Core Minimal API on AWS Lambda");
-
-app.Run();
+        app.UseRouting();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapGet("/", async context =>
+            {
+                await context.Response.WriteAsync("Welcome to running ASP.NET Core Minimal API on AWS Lambda");
+            });
+        });
+    }
+}
