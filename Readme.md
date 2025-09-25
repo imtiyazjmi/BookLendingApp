@@ -1,56 +1,117 @@
-# ASP.NET Core Minimal API Serverless Application
+# Book Lending App
 
-This project shows how to run an ASP.NET Core Web API project as an AWS Lambda exposed through Amazon API Gateway. The NuGet package [Amazon.Lambda.AspNetCoreServer](https://www.nuget.org/packages/Amazon.Lambda.AspNetCoreServer) contains a Lambda function that is used to translate requests from API Gateway into the ASP.NET Core framework and then the responses from ASP.NET Core back to API Gateway.
+ASP.NET Core Web API for managing book lending operations, built as an AWS Lambda serverless application.
 
+## Features
 
-For more information about how the Amazon.Lambda.AspNetCoreServer package works and how to extend its behavior view its [README](https://github.com/aws/aws-lambda-dotnet/blob/master/Libraries/src/Amazon.Lambda.AspNetCoreServer/README.md) file in GitHub.
+- **Book Management**: CRUD operations for books
+- **Book Lending**: Check-out and return functionality
+- **ISBN Validation**: Unique ISBN constraint
+- **Standard API Responses**: Consistent JSON format with code, message, data, and error fields
+- **Database Integration**: PostgreSQL with Entity Framework Core
+- **AWS Integration**: SSM Parameter Store for secure configuration
+- **Serverless Ready**: AWS Lambda deployment support
 
-## Executable Assembly ##
+## Project Structure
 
-.NET Lambda projects that use C# top level statements like this project must be deployed as an executable assembly instead of a class library. To indicate to Lambda that the .NET function is an executable assembly the 
-Lambda function handler value is set to the .NET Assembly name. This is different then deploying as a class library where the function handler string includes the assembly, type and method name.
-
-To deploy as an executable assembly the Lambda runtime client must be started to listen for incoming events to process. For an ASP.NET Core application the Lambda runtime client is started by included the
-`Amazon.Lambda.AspNetCoreServer.Hosting` NuGet package and calling `AddAWSLambdaHosting(LambdaEventSource.HttpApi)` passing in the event source while configuring the services of the application. The
-event source can be API Gateway REST API and HTTP API or Application Load Balancer.  
-
-## Project Structure ##
-
-The project is organized into the following directories:
-
-* **src/** - Contains the source code
-  * Program.cs - entry point to the application that contains all of the top level statements initializing the ASP.NET Core application
-  * Controllers\CalculatorController - example Web API controller
-  * BookLendingApp.csproj - project file
-  * appsettings.json - application configuration
-  * BookLendingApp.sln - solution file
-* **test/** - Contains unit tests (to be added)
-* **deployment/** - Contains infrastructure and DevOps files
-  * serverless.template - AWS CloudFormation Serverless Application Model template
-  * aws-lambda-tools-defaults.json - default argument settings for AWS deployment tools
-
-## Here are some steps to follow from Visual Studio:
-
-To deploy your Serverless application, right click the project in Solution Explorer and select *Publish to AWS Lambda*.
-
-To view your deployed application open the Stack View window by double-clicking the stack name shown beneath the AWS CloudFormation node in the AWS Explorer tree. The Stack View also displays the root URL to your published application.
-
-## Here are some steps to follow to get started from the command line:
-
-Once you have edited your template and code you can deploy your application using the [Amazon.Lambda.Tools Global Tool](https://github.com/aws/aws-extensions-for-dotnet-cli#aws-lambda-amazonlambdatools) from the command line.
-
-Install Amazon.Lambda.Tools Global Tools if not already installed.
 ```
-    dotnet tool install -g Amazon.Lambda.Tools
+BookLendingApp/
+├── src/                     # Source code
+│   ├── Controllers/         # API controllers
+│   ├── Services/           # Business logic
+│   ├── Repositories/       # Data access layer
+│   ├── Interfaces/         # Contracts
+│   ├── Models/             # Data models
+│   ├── Data/               # Database context and configuration
+│   ├── Migrations/         # EF Core migrations
+│   └── Program.cs          # Application entry point
+├── deployment/             # AWS deployment files
+├── test/                   # Unit tests
+└── README.md
 ```
 
-If already installed check if new version is available.
+## API Endpoints
+
+### Books
+- `GET /api/books` - Get all books
+- `GET /api/books/{id}` - Get book by ID
+- `POST /api/books` - Create new book
+- `PUT /api/books/{id}` - Update book
+- `DELETE /api/books/{id}` - Delete book
+
+### Book Operations
+- `POST /api/books/{id}/checkout` - Check out a book
+- `POST /api/books/{id}/return` - Return a book
+
+## Configuration
+
+### Environment Variables
 ```
-    dotnet tool update -g Amazon.Lambda.Tools
+USE_SSM=false
+POSTGRESQL_HOST=localhost
+POSTGRESQL_DATABASE=booklendingdb
+POSTGRESQL_USERNAME=postgres
+POSTGRESQL_PASSWORD=admin
+AWS_REGION=us-east-1
 ```
 
-Deploy application
+### Database Setup
+1. Install PostgreSQL
+2. Update connection settings in `appsettings.json`
+3. Run migrations:
+   ```bash
+   cd src
+   dotnet ef database update
+   ```
+
+## Running the Application
+
+### Local Development
+```bash
+cd src
+dotnet run
 ```
-    cd "src"
-    dotnet lambda deploy-serverless --template ../deployment/serverless.template --s3-bucket your-deployment-bucket
+
+### AWS Lambda Deployment
+```bash
+cd src
+dotnet lambda deploy-serverless --template ../deployment/serverless.template --s3-bucket your-deployment-bucket
 ```
+
+## API Response Format
+
+All endpoints return standardized JSON responses:
+
+### Success Response
+```json
+{
+  "code": 200,
+  "message": "Books retrieved successfully",
+  "data": [...],
+  "error": null
+}
+```
+
+### Error Response
+```json
+{
+  "code": 400,
+  "message": "Failed to create book",
+  "data": null,
+  "error": "ISBN already exists"
+}
+```
+
+## Technologies
+
+- **Framework**: ASP.NET Core 8.0
+- **Database**: PostgreSQL with Entity Framework Core
+- **Cloud**: AWS Lambda, API Gateway, SSM Parameter Store
+- **Architecture**: Clean Architecture with Repository Pattern
+
+## Prerequisites
+
+- .NET 8.0 SDK
+- PostgreSQL
+- AWS CLI (for deployment)
+- Visual Studio or VS Code
