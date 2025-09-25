@@ -6,10 +6,21 @@
     "All the command line options for the Lambda command can be specified in this file."
   ],
   "profile": "",
-  "region": "",
+  "region": "us-east-1",
   "configuration": "Release",
-  "s3-prefix": "BookLendingApp/",
-  "template": "serverless.template",
-  "project-location": "../src",
-  "template-parameters": ""
+  "framework": "net8.0",
+  "function-runtime": "dotnet8",
+  "function-memory-size": 512,
+  "function-timeout": 30,
+  "function-handler": "BookLendingApp",
+  "function-name": "BookLendingApp",
+  "function-description": "ASP.NET Core Web API for managing book lending operations",
+  "package-type": "Zip",
+  "function-role": "",
+  "function-architecture": "x86_64",
+  "function-subnets": "",
+  "function-security-groups": "",
+  "tracing-mode": "PassThrough",
+  "environment-variables": "USE_SSM=false;POSTGRESQL_HOST=localhost;POSTGRESQL_DATABASE=booklendingdb;POSTGRESQL_USERNAME=postgres;POSTGRESQL_PASSWORD=admin;AWS_REGION=us-east-1",
+  "image-tag": ""
 }
