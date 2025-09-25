@@ -21,10 +21,27 @@ if (useSSM)
 
 builder.Services.AddSingleton<DatabaseConfigurationService>();
 
-builder.Services.AddDbContext<BookContext>(async (serviceProvider, options) =>
+builder.Services.AddDbContext<BookContext>((serviceProvider, options) =>
 {
-    var configService = serviceProvider.GetRequiredService<DatabaseConfigurationService>();
-    var connectionString = await configService.GetConnectionStringAsync();
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var useSSM = configuration.GetValue<bool>("UseSSM");
+    
+    string connectionString;
+    if (useSSM)
+    {
+        // For Lambda, use environment variables when SSM is enabled
+        var host = Environment.GetEnvironmentVariable("POSTGRESQL_HOST") ?? "localhost";
+        var database = Environment.GetEnvironmentVariable("POSTGRESQL_DATABASE") ?? "booklendingdb";
+        var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
+        var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
+        connectionString = $"Host={host};Database={database};Username={username};Password={password}";
+    }
+    else
+    {
+        var pgSettings = configuration.GetSection("PostgreSQL").Get<PostgreSqlSettings>();
+        connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
+    }
+    
     options.UseNpgsql(connectionString);
 });
 

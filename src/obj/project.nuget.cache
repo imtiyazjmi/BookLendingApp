@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JCNt1kQ91aM=",
+  "dgSpecHash": "H6LKGYXCvs0=",
   "success": true,
   "projectFilePath": "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
   "expectedPackageFiles": [
@@ -59,10 +59,7 @@
     "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\system.text.encodings.web\\9.0.9\\system.text.encodings.web.9.0.9.nupkg.sha512",
     "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\system.text.json\\9.0.9\\system.text.json.9.0.9.nupkg.sha512",
     "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",
-    "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\microsoft.netcore.app.runtime.linux-x64\\8.0.20\\microsoft.netcore.app.runtime.linux-x64.8.0.20.nupkg.sha512",
-    "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.linux-x64\\8.0.20\\microsoft.aspnetcore.app.runtime.linux-x64.8.0.20.nupkg.sha512",
-    "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\microsoft.netcore.app.crossgen2.win-x64\\8.0.20\\microsoft.netcore.app.crossgen2.win-x64.8.0.20.nupkg.sha512",
-    "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\8.0.20\\microsoft.netcore.app.host.linux-x64.8.0.20.nupkg.sha512"
+    "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\microsoft.netcore.app.crossgen2.win-x64\\8.0.20\\microsoft.netcore.app.crossgen2.win-x64.8.0.20.nupkg.sha512"
   ],
   "logs": []
 }

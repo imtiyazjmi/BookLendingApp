@@ -13,8 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Zip Lambda package
-        run: zip -r lambda-function.zip . -x ".git/*"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Lambda Tools
+        run: dotnet tool install -g Amazon.Lambda.Tools
+
+      - name: Build and Package Lambda
+        run: |
+          cd src
+          dotnet lambda package --configuration Release --framework net8.0 --output-package ../deployment/lambda-function.zip
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -24,7 +34,7 @@ jobs:
           aws-region: us-east-1  # Change to your region
 
       - name: Upload to S3
-        run: aws s3 cp lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
+        run: aws s3 cp deployment/lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
 
       - name: Update Lambda function
         run: |
