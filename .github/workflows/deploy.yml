@@ -36,12 +36,20 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp deployment/lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
 
-      - name: Update Lambda function
+      - name: Update Lambda function code
         run: |
           aws lambda update-function-code \
             --function-name MyLambdaFunction \
             --s3-bucket lambda-deployment-565393029483-us-east-1 \
             --s3-key lambda-function.zip
+
+      - name: Wait for function update to complete
+        run: |
+          aws lambda wait function-updated \
+            --function-name MyLambdaFunction
+
+      - name: Update Lambda function configuration
+        run: |
           aws lambda update-function-configuration \
             --function-name MyLambdaFunction \
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync"
