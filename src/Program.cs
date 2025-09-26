@@ -48,8 +48,10 @@ public class Startup
         services.AddDbContext<BookContext>((serviceProvider, options) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
             var useSSM = configuration.GetValue<bool>("UseSSM");
-            Console.WriteLine("useSSM: " + useSSM); 
+            logger.LogInformation("useSSM: {UseSSM}", useSSM);
+            
             string connectionString;
             if (useSSM)
             {
@@ -58,23 +60,26 @@ public class Startup
                 var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
                 var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
                 connectionString = $"Host={host};Database={database};Username={username};Password={password}";
+                logger.LogInformation("Using SSM environment variables for database connection" + connectionString);
             }
             else
             {
                 var pgSettings = configuration.GetSection("PostgreSQL").Get<PostgreSqlSettings>();
-                Console.WriteLine("pgSettings: " + pgSettings); 
+                logger.LogInformation("pgSettings: {PgSettings}", pgSettings?.ToString() ?? "null");
+                
                 if (pgSettings == null)
                 {
-                    Console.WriteLine("pgNull: ");
+                    logger.LogWarning("PostgreSQL configuration not found, using default connection");
                     connectionString = "Host=localhost;Database=booklendingdb;Username=postgres;Password=admin";
                 }
                 else
                 {
-                    Console.WriteLine("pgNotNull: ");
+                    logger.LogInformation("Using PostgreSQL configuration from appsettings");
                     connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
                 }
             }
-            Console.WriteLine("ConnectionStringData: " + connectionString);
+            
+            logger.LogInformation("Database connection configured successfully" + connectionString);
             options.UseNpgsql(connectionString);
         });
 
