@@ -88,7 +88,7 @@ public class BooksController : ControllerBase
         try
         {
             await _bookService.DeleteBookAsync(id);
-            return Ok(ApiResponse<object>.Success(null, "Book deleted successfully"));
+            return Ok(ApiResponse<object>.Success(new { }, "Book deleted successfully"));
         }
         catch (Exception ex)
         {

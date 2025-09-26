@@ -47,8 +47,9 @@ public class Startup
 
         services.AddDbContext<BookContext>((serviceProvider, options) =>
         {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            logger.LogInformation("configuration: {configuration}", configuration);
             var useSSM = configuration.GetValue<bool>("UseSSM");
             logger.LogInformation("useSSM: {UseSSM}", useSSM);
             
