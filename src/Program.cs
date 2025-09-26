@@ -49,7 +49,7 @@ public class Startup
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var useSSM = configuration.GetValue<bool>("UseSSM");
-            
+            Console.WriteLine("useSSM: " + useSSM); 
             string connectionString;
             if (useSSM)
             {
@@ -62,9 +62,19 @@ public class Startup
             else
             {
                 var pgSettings = configuration.GetSection("PostgreSQL").Get<PostgreSqlSettings>();
-                connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
+                Console.WriteLine("pgSettings: " + pgSettings); 
+                if (pgSettings == null)
+                {
+                    Console.WriteLine("pgNull: ");
+                    connectionString = "Host=localhost;Database=booklendingdb;Username=postgres;Password=admin";
+                }
+                else
+                {
+                    Console.WriteLine("pgNotNull: ");
+                    connectionString = $"Host={pgSettings.Host};Database={pgSettings.Database};Username={pgSettings.Username};Password={pgSettings.Password}";
+                }
             }
-            
+            Console.WriteLine("ConnectionStringData: " + connectionString);
             options.UseNpgsql(connectionString);
         });
 
