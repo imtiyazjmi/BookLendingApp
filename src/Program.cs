@@ -64,7 +64,7 @@ public class Startup
                 var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "masteruser";
                 var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "Password2123";
                 connectionString = $"Host={host};Database={database};Username={username};Password={password}";
-                logger.LogInformation("Using environment variables for database connection: Host={Host}, Database={Database}, Username={Username}", host, database, username);
+                logger.LogInformation("Using environments variable for database connection: Host={Host}, Database={Database}, Username={Username}", host, database, username);
             }
             else
             {
