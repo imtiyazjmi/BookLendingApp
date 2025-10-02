@@ -93,7 +93,7 @@ jobs:
               "POSTGRESQL_DATABASE": "postgres",
               "POSTGRESQL_USERNAME": "masteruser",
               "POSTGRESQL_PASSWORD": "Password2123",
-              "AWS_REGION": "us-east-1"
+              "AWS_LAMBDA_REGION": "us-east-1"
             }
           }
           EOF

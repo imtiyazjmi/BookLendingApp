@@ -96,8 +96,7 @@ Resources:
           POSTGRESQL_DATABASE: postgres
           POSTGRESQL_USERNAME: masteruser
           POSTGRESQL_PASSWORD: Password2123
-          AWS_REGION: !Ref AWS::Region
-
+          AWS_LAMBDA_REGION: !Ref AWS::Region
   # RDS Subnet Group
   MyDBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
