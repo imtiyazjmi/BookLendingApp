@@ -98,6 +98,13 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
+        // Apply migrations on startup
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<BookContext>();
+            context.Database.Migrate();
+        }
+
         app.UseRouting();
         app.UseEndpoints(endpoints =>
         {
