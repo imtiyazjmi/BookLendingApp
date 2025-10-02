@@ -33,20 +33,49 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Change to your region
 
+      - name: Deploy Infrastructure
+        run: |
+          aws cloudformation deploy \
+            --template-file cloudformation_template_enhanced.yaml \
+            --stack-name BookLendingInfrastructure \
+            --capabilities CAPABILITY_IAM \
+            --parameter-overrides \
+              VpcCidr=10.0.0.0/16 \
+              PublicSubnetCidr=10.0.1.0/24 \
+              PrivateSubnetCidr=10.0.2.0/24 \
+              DBUsername=masteruser \
+              DBPassword=Password2123
+
       - name: Upload to S3
         run: aws s3 cp deployment/lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
+
+      - name: Get Lambda Function Name
+        run: |
+          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
+            --stack-name BookLendingInfrastructure \
+            --query 'Stacks[0].Outputs[?OutputKey==`LambdaFunctionName`].OutputValue' \
+            --output text)
+          echo "LAMBDA_FUNCTION_NAME=$LAMBDA_FUNCTION_NAME" >> $GITHUB_ENV
 
       - name: Update Lambda function code
         run: |
           aws lambda update-function-code \
-            --function-name MyLambdaFunction \
+            --function-name $LAMBDA_FUNCTION_NAME \
             --s3-bucket lambda-deployment-565393029483-us-east-1 \
             --s3-key lambda-function.zip
 
       - name: Wait for function update to complete
         run: |
           aws lambda wait function-updated \
-            --function-name MyLambdaFunction
+            --function-name $LAMBDA_FUNCTION_NAME
+
+      - name: Get Infrastructure Outputs
+        run: |
+          RDS_ENDPOINT=$(aws cloudformation describe-stacks \
+            --stack-name BookLendingInfrastructure \
+            --query 'Stacks[0].Outputs[?OutputKey==`RDSEndpoint`].OutputValue' \
+            --output text)
+          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
 
       - name: Create environment variables file
         run: |
@@ -54,11 +83,11 @@ jobs:
           {
             "Variables": {
               "USE_SSM": "false",
-              "POSTGRESQL_HOST": "${{ secrets.RDS_ENDPOINT }}",
+              "POSTGRESQL_HOST": "$RDS_ENDPOINT",
               "POSTGRESQL_DATABASE": "postgres",
               "POSTGRESQL_USERNAME": "masteruser",
               "POSTGRESQL_PASSWORD": "Password2123",
-              "AWS_LAMBDA_REGION": "us-east-1"
+              "AWS_REGION": "us-east-1"
             }
           }
           EOF
@@ -66,7 +95,7 @@ jobs:
       - name: Update Lambda function configuration
         run: |
           aws lambda update-function-configuration \
-            --function-name MyLambdaFunction \
+            --function-name $LAMBDA_FUNCTION_NAME \
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
             --environment file://env-vars.json \
             --timeout 30
@@ -76,7 +105,7 @@ jobs:
           aws cloudformation deploy \
             --template-file deployment/api-gateway.yaml \
             --stack-name BookLendingApiGateway \
-            --parameter-overrides LambdaFunctionName=MyLambdaFunction \
+            --parameter-overrides LambdaFunctionName=$LAMBDA_FUNCTION_NAME \
             --capabilities CAPABILITY_IAM
 
       - name: Get API Gateway URL
