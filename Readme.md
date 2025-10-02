@@ -52,7 +52,7 @@ POSTGRESQL_HOST=localhost
 POSTGRESQL_DATABASE=booklendingdb
 POSTGRESQL_USERNAME=postgres
 POSTGRESQL_PASSWORD=admin
-AWS_REGION=us-east-1
+AWS_LAMBDA_REGION=us-east-1
 ```
 
 ### Database Setup
