@@ -54,14 +54,17 @@ public class Startup
             logger.LogInformation("useSSM: {UseSSM}", useSSM);
             
             string connectionString;
-            if (useSSM)
+            
+            // Check if environment variables are available (Lambda deployment)
+            var envHost = Environment.GetEnvironmentVariable("POSTGRESQL_HOST");
+            if (!string.IsNullOrEmpty(envHost))
             {
-                var host = Environment.GetEnvironmentVariable("POSTGRESQL_HOST") ?? "localhost";
-                var database = Environment.GetEnvironmentVariable("POSTGRESQL_DATABASE") ?? "booklendingdb";
-                var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
-                var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
+                var host = envHost;
+                var database = Environment.GetEnvironmentVariable("POSTGRESQL_DATABASE") ?? "postgres";
+                var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "masteruser";
+                var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "Password2123";
                 connectionString = $"Host={host};Database={database};Username={username};Password={password}";
-                logger.LogInformation("Using SSM environment variables for database connections " + connectionString);
+                logger.LogInformation("Using environment variables for database connection: Host={Host}, Database={Database}, Username={Username}", host, database, username);
             }
             else
             {
