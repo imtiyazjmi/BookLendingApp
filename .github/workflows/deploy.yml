@@ -36,26 +36,32 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           aws cloudformation deploy \
-            --template-file deployment/cloudformation_template_enhanced.yaml \
+            --template-file deployment/minimal-infrastructure.yaml \
             --stack-name BookLendingInfrastructure \
-            --capabilities CAPABILITY_IAM \
-            --parameter-overrides \
-              VpcCidr=10.0.0.0/16 \
-              PublicSubnetCidr=10.0.1.0/24 \
-              PrivateSubnetCidr=10.0.2.0/24 \
-              DBUsername=masteruser \
-              DBPassword=Password2123
+            --capabilities CAPABILITY_IAM
 
       - name: Upload to S3
         run: aws s3 cp deployment/lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
 
       - name: Get Lambda Function Name
         run: |
+          echo "Checking CloudFormation stack outputs..."
+          aws cloudformation describe-stacks --stack-name BookLendingInfrastructure --query 'Stacks[0].Outputs'
+          
           LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
             --stack-name BookLendingInfrastructure \
             --query 'Stacks[0].Outputs[?OutputKey==`LambdaFunctionName`].OutputValue' \
             --output text)
+          
+          echo "Retrieved Lambda Function Name: $LAMBDA_FUNCTION_NAME"
+          
+          if [ "$LAMBDA_FUNCTION_NAME" = "None" ] || [ -z "$LAMBDA_FUNCTION_NAME" ]; then
+            echo "Lambda function name not found in outputs, using direct resource name"
+            LAMBDA_FUNCTION_NAME="BookLendingLambda"
+          fi
+          
           echo "LAMBDA_FUNCTION_NAME=$LAMBDA_FUNCTION_NAME" >> $GITHUB_ENV
+          echo "Final Lambda Function Name: $LAMBDA_FUNCTION_NAME"
 
       - name: Update Lambda function code
         run: |
