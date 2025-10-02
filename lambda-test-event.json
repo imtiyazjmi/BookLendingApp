@@ -1,0 +1,36 @@
+{
+  "httpMethod": "GET",
+  "path": "/api/books",
+  "resource": "/api/books",
+  "headers": {
+    "Accept": "*/*",
+    "Host": "example.execute-api.us-east-1.amazonaws.com"
+  },
+  "multiValueHeaders": {
+    "Accept": ["*/*"],
+    "Host": ["example.execute-api.us-east-1.amazonaws.com"]
+  },
+  "queryStringParameters": {},
+  "multiValueQueryStringParameters": {},
+  "pathParameters": {},
+  "stageVariables": {},
+  "requestContext": {
+    "resourcePath": "/api/books",
+    "httpMethod": "GET",
+    "path": "/Prod/api/books",
+    "accountId": "123456789012",
+    "apiId": "1234567890",
+    "stage": "Prod",
+    "requestId": "test-request-id",
+    "protocol": "HTTP/1.1",
+    "resourceId": "123456",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "sourceIp": "127.0.0.1",
+      "userAgent": "Custom User Agent String"
+    }
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

@@ -52,4 +52,5 @@ jobs:
         run: |
           aws lambda update-function-configuration \
             --function-name MyLambdaFunction \
-            --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync"
+            --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
+            --environment Variables='{"USE_SSM":"false","POSTGRESQL_HOST":"${{ secrets.RDS_ENDPOINT }}","POSTGRESQL_DATABASE":"postgres","POSTGRESQL_USERNAME":"masteruser","POSTGRESQL_PASSWORD":"Password2123","AWS_REGION":"us-east-1"}'
