@@ -36,7 +36,7 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           aws cloudformation deploy \
-            --template-file cloudformation_template_enhanced.yaml \
+            --template-file deployment/cloudformation_template_enhanced.yaml \
             --stack-name BookLendingInfrastructure \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides \
