@@ -61,7 +61,7 @@ public class Startup
                 var username = Environment.GetEnvironmentVariable("POSTGRESQL_USERNAME") ?? "postgres";
                 var password = Environment.GetEnvironmentVariable("POSTGRESQL_PASSWORD") ?? "admin";
                 connectionString = $"Host={host};Database={database};Username={username};Password={password}";
-                logger.LogInformation("Using SSM environment variables for database connection" + connectionString);
+                logger.LogInformation("Using SSM environment variables for database connections " + connectionString);
             }
             else
             {
