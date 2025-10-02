@@ -49,8 +49,11 @@ jobs:
             --function-name MyLambdaFunction
 
       - name: Update Lambda function configuration
+        env:
+          RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
         run: |
           aws lambda update-function-configuration \
             --function-name MyLambdaFunction \
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
-            --environment Variables='{"USE_SSM":"false","POSTGRESQL_HOST":"${{ secrets.RDS_ENDPOINT }}","POSTGRESQL_DATABASE":"postgres","POSTGRESQL_USERNAME":"masteruser","POSTGRESQL_PASSWORD":"Password2123","AWS_REGION":"us-east-1"}'
+            --environment Variables="{\"USE_SSM\":\"false\",\"POSTGRESQL_HOST\":\"${RDS_ENDPOINT}\",\"POSTGRESQL_DATABASE\":\"postgres\",\"POSTGRESQL_USERNAME\":\"masteruser\",\"POSTGRESQL_PASSWORD\":\"Password2123\",\"AWS_REGION\":\"us-east-1\"}" \
+            --timeout 30
