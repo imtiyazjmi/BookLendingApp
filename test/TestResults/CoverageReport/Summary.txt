@@ -1,0 +1,33 @@
+Summary
+  Generated on: 02-10-2025 - 10:18:27
+  Coverage date: 02-10-2025 - 10:18:08
+  Parser: Cobertura
+  Assemblies: 1
+  Classes: 11
+  Files: 10
+  Line coverage: 48.2%
+  Covered lines: 151
+  Uncovered lines: 162
+  Coverable lines: 313
+  Total lines: 517
+  Branch coverage: 34% (15 of 44)
+  Covered branches: 15
+  Total branches: 44
+  Method coverage: 74.5% (38 of 51)
+  Full method coverage: 68.6% (35 of 51)
+  Covered methods: 38
+  Fully covered methods: 35
+  Total methods: 51
+
+BookLendingApp                                           48.2%
+  BookLendingApp.Controllers.BooksController             57.5%
+  BookLendingApp.Data.BookContext                         100%
+  BookLendingApp.LambdaEntryPoint                           0%
+  BookLendingApp.Models.ApiResponse<T>                    100%
+  BookLendingApp.Program                                    0%
+  BookLendingApp.Repositories.BookRepository              100%
+  BookLendingApp.Services.BookService                     100%
+  BookLendingApp.Services.DatabaseConfigurationService      0%
+  BookLendingApp.Services.ParameterStoreService             0%
+  BookLendingApp.Startup                                    0%
+  BookStore.Models.Book                                   100%

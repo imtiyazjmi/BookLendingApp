@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj": {}
+    "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj": {}
   },
   "projects": {
-    "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj": {
+    "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
+        "projectUniqueName": "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
         "projectName": "BookLendingApp",
-        "projectPath": "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
+        "projectPath": "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
         "packagesPath": "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\",
-        "outputPath": "D:\\Study\\MS .Net\\BookLendingApp\\src\\obj\\",
+        "outputPath": "d:\\Study\\MS .Net\\BookLendingApp\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

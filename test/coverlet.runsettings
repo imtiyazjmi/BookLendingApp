@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <ExcludeByAttribute>ExcludeFromCodeCoverage</ExcludeByAttribute>
+          <Exclude>[*]*Migrations*</Exclude>
+          <Exclude>[*]*Program*</Exclude>
+          <Exclude>[*]*Startup*</Exclude>
+          <Exclude>[*]*LambdaEntryPoint*</Exclude>
+          <Exclude>[*]*DatabaseConfigurationService*</Exclude>
+          <Exclude>[*]*ParameterStoreService*</Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

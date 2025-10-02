@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace BookLendingApp.Data;
 
+[ExcludeFromCodeCoverage]
 public class PostgreSqlSettings
 {
     public string Host { get; set; } = string.Empty;
@@ -8,12 +11,14 @@ public class PostgreSqlSettings
     public string Password { get; set; } = string.Empty;
 }
 
+[ExcludeFromCodeCoverage]
 public class AwsSettings
 {
     public string Region { get; set; } = string.Empty;
     public SsmSettings SSM { get; set; } = new();
 }
 
+[ExcludeFromCodeCoverage]
 public class SsmSettings
 {
     public string PostgreSqlHostParam { get; set; } = string.Empty;
