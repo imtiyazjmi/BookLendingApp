@@ -25,7 +25,7 @@ Resources:
       FunctionName: !Ref LambdaFunctionName
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub "${BookLendingApi}/*/ANY/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${BookLendingApi}/*/*"
 
   # Proxy Resource (catches all paths)
   ProxyResource:
