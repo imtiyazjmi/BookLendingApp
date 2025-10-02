@@ -48,12 +48,25 @@ jobs:
           aws lambda wait function-updated \
             --function-name MyLambdaFunction
 
+      - name: Create environment variables file
+        run: |
+          cat > env-vars.json << EOF
+          {
+            "Variables": {
+              "USE_SSM": "false",
+              "POSTGRESQL_HOST": "${{ secrets.RDS_ENDPOINT }}",
+              "POSTGRESQL_DATABASE": "postgres",
+              "POSTGRESQL_USERNAME": "masteruser",
+              "POSTGRESQL_PASSWORD": "Password2123",
+              "AWS_REGION": "us-east-1"
+            }
+          }
+          EOF
+
       - name: Update Lambda function configuration
-        env:
-          RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
         run: |
           aws lambda update-function-configuration \
             --function-name MyLambdaFunction \
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
-            --environment Variables="{\"USE_SSM\":\"false\",\"POSTGRESQL_HOST\":\"${RDS_ENDPOINT}\",\"POSTGRESQL_DATABASE\":\"postgres\",\"POSTGRESQL_USERNAME\":\"masteruser\",\"POSTGRESQL_PASSWORD\":\"Password2123\",\"AWS_REGION\":\"us-east-1\"}" \
+            --environment file://env-vars.json \
             --timeout 30
