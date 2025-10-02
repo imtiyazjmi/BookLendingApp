@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'API Gateway for Book Lending Lambda Function'
+
+Parameters:
+  LambdaFunctionName:
+    Type: String
+    Default: MyLambdaFunction
+    Description: Name of the Lambda function
+
+Resources:
+  # API Gateway REST API
+  BookLendingApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: BookLendingApi
+      Description: API Gateway for Book Lending Application
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # Lambda Permission for API Gateway
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunctionName
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "${BookLendingApi}/*/ANY/*"
+
+  # Proxy Resource (catches all paths)
+  ProxyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref BookLendingApi
+      ParentId: !GetAtt BookLendingApi.RootResourceId
+      PathPart: "{proxy+}"
+
+  # ANY Method for Proxy Resource
+  ProxyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref BookLendingApi
+      ResourceId: !Ref ProxyResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaFunctionName}/invocations"
+
+  # Root Method (for root path)
+  RootMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref BookLendingApi
+      ResourceId: !GetAtt BookLendingApi.RootResourceId
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaFunctionName}/invocations"
+
+  # Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - ProxyMethod
+      - RootMethod
+    Properties:
+      RestApiId: !Ref BookLendingApi
+      StageName: prod
+
+Outputs:
+  ApiGatewayUrl:
+    Description: URL of the API Gateway
+    Value: !Sub "https://${BookLendingApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+    Export:
+      Name: BookLendingApiUrl

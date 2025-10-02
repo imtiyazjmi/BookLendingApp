@@ -70,3 +70,19 @@ jobs:
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
             --environment file://env-vars.json \
             --timeout 30
+
+      - name: Deploy API Gateway
+        run: |
+          aws cloudformation deploy \
+            --template-file deployment/api-gateway.yaml \
+            --stack-name BookLendingApiGateway \
+            --parameter-overrides LambdaFunctionName=MyLambdaFunction \
+            --capabilities CAPABILITY_IAM
+
+      - name: Get API Gateway URL
+        run: |
+          API_URL=$(aws cloudformation describe-stacks \
+            --stack-name BookLendingApiGateway \
+            --query 'Stacks[0].Outputs[?OutputKey==`ApiGatewayUrl`].OutputValue' \
+            --output text)
+          echo "API Gateway URL: $API_URL"
