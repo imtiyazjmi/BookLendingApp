@@ -24,7 +24,10 @@ jobs:
       - name: Build and Package Lambda
         run: |
           cd src
-          dotnet lambda package --configuration Release --framework net8.0 --output-package ../deployment/lambda-function.zip
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          LAMBDA_ZIP="lambda-function-$TIMESTAMP.zip"
+          echo "LAMBDA_ZIP=$LAMBDA_ZIP" >> $GITHUB_ENV
+          dotnet lambda package --configuration Release --framework net8.0 --output-package ../deployment/$LAMBDA_ZIP
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -41,7 +44,7 @@ jobs:
             --capabilities CAPABILITY_IAM
 
       - name: Upload to S3
-        run: aws s3 cp deployment/lambda-function.zip s3://lambda-deployment-565393029483-us-east-1/lambda-function.zip
+        run: aws s3 cp deployment/$LAMBDA_ZIP s3://lambda-deployment-565393029483-us-east-1/$LAMBDA_ZIP
 
       - name: Get Lambda Function Name
         run: |
@@ -63,47 +66,24 @@ jobs:
           echo "LAMBDA_FUNCTION_NAME=$LAMBDA_FUNCTION_NAME" >> $GITHUB_ENV
           echo "Final Lambda Function Name: $LAMBDA_FUNCTION_NAME"
 
-      - name: Update Lambda function code
-        run: |
-          aws lambda update-function-code \
-            --function-name $LAMBDA_FUNCTION_NAME \
-            --s3-bucket lambda-deployment-565393029483-us-east-1 \
-            --s3-key lambda-function.zip
-
-      - name: Wait for function update to complete
-        run: |
-          aws lambda wait function-updated \
-            --function-name $LAMBDA_FUNCTION_NAME
-
-      - name: Get Infrastructure Outputs
+      - name: Get Infrastructure Outputs and Deploy Lambda
         run: |
           RDS_ENDPOINT=$(aws cloudformation describe-stacks \
             --stack-name BookLendingInfrastructure \
             --query 'Stacks[0].Outputs[?OutputKey==`RDSEndpoint`].OutputValue' \
             --output text)
-          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
-
-      - name: Create environment variables file
-        run: |
-          cat > env-vars.json << EOF
-          {
-            "Variables": {
-              "USE_SSM": "false",
-              "POSTGRESQL_HOST": "$RDS_ENDPOINT",
-              "POSTGRESQL_DATABASE": "postgres",
-              "POSTGRESQL_USERNAME": "masteruser",
-              "POSTGRESQL_PASSWORD": "Password2123",
-              "AWS_LAMBDA_REGION": "us-east-1"
-            }
-          }
-          EOF
-
-      - name: Update Lambda function configuration
-        run: |
+          
+          aws lambda update-function-code \
+            --function-name $LAMBDA_FUNCTION_NAME \
+            --s3-bucket lambda-deployment-565393029483-us-east-1 \
+            --s3-key $LAMBDA_ZIP
+          
+          aws lambda wait function-updated --function-name $LAMBDA_FUNCTION_NAME
+          
           aws lambda update-function-configuration \
             --function-name $LAMBDA_FUNCTION_NAME \
             --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
-            --environment file://env-vars.json \
+            --environment Variables='{USE_SSM=false,POSTGRESQL_HOST='$RDS_ENDPOINT',POSTGRESQL_DATABASE=postgres,POSTGRESQL_USERNAME=masteruser,POSTGRESQL_PASSWORD=Password2123,AWS_LAMBDA_REGION=us-east-1}' \
             --timeout 30
 
       - name: Deploy API Gateway

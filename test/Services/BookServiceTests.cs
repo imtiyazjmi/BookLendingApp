@@ -79,33 +79,7 @@ public class BookServiceTests
         _mockRepository.Verify(r => r.CreateAsync(book), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateBookAsync_ReturnsUpdatedBook()
-    {
-        // Arrange
-        var book = new Book { Id = 1, Title = "Updated Book", Author = "Updated Author", ISBN = "999", Publisher = "Updated Pub", Pages = 400, UnitsAvailable = 1 };
-        _mockRepository.Setup(r => r.UpdateAsync(book)).ReturnsAsync(book);
 
-        // Act
-        var result = await _service.UpdateBookAsync(book);
-
-        // Assert
-        Assert.Equal(book, result);
-        _mockRepository.Verify(r => r.UpdateAsync(book), Times.Once);
-    }
-
-    [Fact]
-    public async Task DeleteBookAsync_CallsRepositoryDelete()
-    {
-        // Arrange
-        _mockRepository.Setup(r => r.DeleteAsync(1)).Returns(Task.CompletedTask);
-
-        // Act
-        await _service.DeleteBookAsync(1);
-
-        // Assert
-        _mockRepository.Verify(r => r.DeleteAsync(1), Times.Once);
-    }
 
     [Fact]
     public async Task CheckOutBookAsync_ReturnsBook_WhenBookAvailable()

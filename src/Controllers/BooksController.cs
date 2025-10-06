@@ -63,39 +63,6 @@ public class BooksController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<ApiResponse<Book>>> UpdateBook(int id, Book book)
-    {
-        try
-        {
-            if (id != book.Id)
-                return BadRequest(ApiResponse<Book>.Failure("ID mismatch", "Invalid request"));
-
-            var updatedBook = await _bookService.UpdateBookAsync(book);
-            return Ok(ApiResponse<Book>.Success(updatedBook, "Book updated successfully"));
-        }
-        catch (Exception ex)
-        {
-            var errorMessage = ex.Message.Contains("duplicate key value violates unique constraint \"IX_Books_ISBN\"") 
-                ? "ISBN already exists" : ex.Message;
-            return BadRequest(ApiResponse<Book>.Failure(errorMessage, "Failed to update book"));
-        }
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<ApiResponse<object>>> DeleteBook(int id)
-    {
-        try
-        {
-            await _bookService.DeleteBookAsync(id);
-            return Ok(ApiResponse<object>.Success(new { }, "Book deleted successfully"));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ApiResponse<object>.Failure(ex.Message, "Failed to delete book"));
-        }
-    }
-
     [HttpPost("{id}/checkout")]
     public async Task<ActionResult<ApiResponse<Book>>> CheckOutBook(int id)
     {
