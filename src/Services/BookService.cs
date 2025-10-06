@@ -29,6 +29,14 @@ public class BookService : IBookService
 
     public async Task<Book> UpdateBookAsync(Book book)
     {
+        var existingBook = await _bookRepository.GetByIdAsync(book.Id);
+        if (existingBook != null && existingBook.ISBN != book.ISBN)
+        {
+            if (await _bookRepository.IsbnExistsAsync(book.ISBN))
+            {
+                throw new InvalidOperationException($"A book with ISBN '{book.ISBN}' already exists.");
+            }
+        }
         return await _bookRepository.UpdateAsync(book);
     }
 

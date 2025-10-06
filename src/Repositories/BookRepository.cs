@@ -26,9 +26,19 @@ public class BookRepository : IBookRepository
 
     public async Task<Book> CreateAsync(Book book)
     {
+        if (await IsbnExistsAsync(book.ISBN))
+        {
+            throw new InvalidOperationException($"A book with ISBN '{book.ISBN}' already exists.");
+        }
+        
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
         return book;
+    }
+
+    public async Task<bool> IsbnExistsAsync(string isbn)
+    {
+        return await _context.Books.AnyAsync(b => b.ISBN == isbn);
     }
 
     public async Task<Book> UpdateAsync(Book book)

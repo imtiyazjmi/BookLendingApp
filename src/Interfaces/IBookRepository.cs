@@ -9,4 +9,5 @@ public interface IBookRepository
     Task<Book> CreateAsync(Book book);
     Task<Book> UpdateAsync(Book book);
     Task DeleteAsync(int id);
+    Task<bool> IsbnExistsAsync(string isbn);
 }
