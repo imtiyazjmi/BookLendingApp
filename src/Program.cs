@@ -5,9 +5,11 @@ using BookLendingApp.Repositories;
 using BookLendingApp.Interfaces;
 using Amazon.SimpleSystemsManagement;
 using Amazon.Extensions.NETCore.Setup;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BookLendingApp;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)
@@ -23,6 +25,7 @@ public class Program
             });
 }
 
+[ExcludeFromCodeCoverage]
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -49,7 +52,17 @@ public class Startup
         {
             var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            logger.LogInformation("configuration: {configuration}", configuration);
+            var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+            
+            // Use in-memory database for local development
+            if (environment.IsDevelopment())
+            {
+                logger.LogInformation("Using in-memory database for local development");
+                options.UseInMemoryDatabase("BookLendingDb");
+                return;
+            }
+            
+            // Use PostgreSQL for AWS/production
             var useSSM = configuration.GetValue<bool>("UseSSM");
             logger.LogInformation("useSSM: {UseSSM}", useSSM);
             
@@ -98,11 +111,14 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
-        // Apply migrations on startup
+        // Apply migrations on startup (skip for in-memory database)
         using (var scope = app.ApplicationServices.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<BookContext>();
-            context.Database.Migrate();
+            if (!context.Database.IsInMemory())
+            {
+                context.Database.Migrate();
+            }
         }
 
         app.UseRouting();

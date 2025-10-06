@@ -1,8 +1,10 @@
 using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BookLendingApp.Services;
 
+[ExcludeFromCodeCoverage]
 public class ParameterStoreService
 {
     private readonly IAmazonSimpleSystemsManagement _ssmClient;

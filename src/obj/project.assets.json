@@ -615,6 +615,24 @@
           "build/net8.0/Microsoft.EntityFrameworkCore.Design.props": {}
         }
       },
+      "Microsoft.EntityFrameworkCore.InMemory/9.0.9": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.9",
+          "Microsoft.Extensions.Caching.Memory": "9.0.9",
+          "Microsoft.Extensions.Logging": "9.0.9"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational/9.0.9": {
         "type": "package",
         "dependencies": {
@@ -2432,6 +2450,21 @@
         "microsoft.entityframeworkcore.design.nuspec"
       ]
     },
+    "Microsoft.EntityFrameworkCore.InMemory/9.0.9": {
+      "sha512": "n24o1SQU8A15ybZNTqmbuzHd9gAgjgwY7EudiS5Vdp1yLoaJE7jOGnvDeTBm5WFPBXuNfap6xRZK27acCKRCmw==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.inmemory/9.0.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.InMemory.xml",
+        "microsoft.entityframeworkcore.inmemory.9.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.inmemory.nuspec"
+      ]
+    },
     "Microsoft.EntityFrameworkCore.Relational/9.0.9": {
       "sha512": "SonFU9a8x4jZIhIBtCw1hIE3QKjd4c7Y3mjptoh682dfQe7K9pUPGcEV/sk4n8AJdq4fkyJPCaOdYaObhae/Iw==",
       "type": "package",
@@ -3311,6 +3344,7 @@
       "Amazon.Lambda.AspNetCoreServer.Hosting >= 1.7.2",
       "Microsoft.EntityFrameworkCore >= 9.0.9",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.9",
+      "Microsoft.EntityFrameworkCore.InMemory >= 9.0.9",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4"
     ]
   },
@@ -3321,11 +3355,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
+      "projectUniqueName": "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
       "projectName": "BookLendingApp",
-      "projectPath": "d:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
+      "projectPath": "D:\\Study\\MS .Net\\BookLendingApp\\src\\BookLendingApp.csproj",
       "packagesPath": "C:\\Users\\Imtiyaz Ahmad\\.nuget\\packages\\",
-      "outputPath": "d:\\Study\\MS .Net\\BookLendingApp\\src\\obj\\",
+      "outputPath": "D:\\Study\\MS .Net\\BookLendingApp\\src\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3383,6 +3417,10 @@
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[9.0.9, )"
+          },
+          "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
             "version": "[9.0.9, )"
           },

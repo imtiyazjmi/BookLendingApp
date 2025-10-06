@@ -1,8 +1,10 @@
 using BookLendingApp.Data;
 using BookLendingApp.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BookLendingApp.Services;
 
+[ExcludeFromCodeCoverage]
 public class DatabaseConfigurationService
 {
     private readonly IConfiguration _configuration;

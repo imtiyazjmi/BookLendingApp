@@ -142,3 +142,4 @@ D:\Study\MS .Net\BookLendingApp\src\obj\Debug\net8.0\refint\BookLendingApp.dll
 D:\Study\MS .Net\BookLendingApp\src\obj\Debug\net8.0\BookLendingApp.pdb
 D:\Study\MS .Net\BookLendingApp\src\obj\Debug\net8.0\BookLendingApp.genruntimeconfig.cache
 D:\Study\MS .Net\BookLendingApp\src\obj\Debug\net8.0\ref\BookLendingApp.dll
+d:\Study\MS .Net\BookLendingApp\src\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
