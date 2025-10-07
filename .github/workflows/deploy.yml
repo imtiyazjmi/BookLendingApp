@@ -58,8 +58,15 @@ jobs:
               AWSLambdaRegion=us-east-1 \
             --capabilities CAPABILITY_IAM
             
-      - name: Deploy API Gateway
+      - name: Get Lambda Function Name and Deploy API Gateway
         run: |
+          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
+            --stack-name BookLendingInfrastructure \
+            --query 'Stacks[0].Outputs[?OutputKey==`LambdaFunctionName`].OutputValue' \
+            --output text)
+          
+          echo "Lambda Function Name: $LAMBDA_FUNCTION_NAME"
+          
           aws cloudformation deploy \
             --template-file deployment/api-gateway.yaml \
             --stack-name BookLendingApiGateway \
