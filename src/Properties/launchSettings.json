@@ -3,10 +3,11 @@
     "BookLendingApp": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:55358;http://localhost:55359"
+      "applicationUrl": "http://localhost:55358;http://localhost:55359"
     },
     "Mock Lambda Test Tool": {
       "commandName": "Executable",

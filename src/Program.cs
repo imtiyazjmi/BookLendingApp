@@ -38,6 +38,21 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "Book Lending API",
+                Version = "v1",
+                Description = "ASP.NET Core Web API for managing book lending operations",
+                Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                {
+                    Name = "Book Lending App",
+                    Email = "support@booklending.com"
+                }
+            });
+        });
 
         var useSSM = Configuration.GetValue<bool>("UseSSM");
         if (useSSM)
@@ -109,6 +124,12 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Book Lending API v1");
+                c.RoutePrefix = "swagger";
+            });
         }
 
         // Apply migrations on startup (skip for in-memory database)
