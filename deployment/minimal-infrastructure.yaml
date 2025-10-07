@@ -1,6 +1,36 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Minimal infrastructure for Lambda + RDS'
 
+Parameters:
+  S3Key:
+    Type: String
+    Description: S3 key for the Lambda deployment package
+    Default: lambda-function.zip
+  PostgreSQLHost:
+    Type: String
+    Description: PostgreSQL RDS endpoint
+    Default: ""
+  PostgreSQLDatabase:
+    Type: String
+    Description: PostgreSQL database name
+    Default: postgres
+  PostgreSQLUsername:
+    Type: String
+    Description: PostgreSQL username
+    Default: masteruser
+  PostgreSQLPassword:
+    Type: String
+    Description: PostgreSQL password
+    Default: Password2123
+    NoEcho: true
+  AWSLambdaRegion:
+    Type: String
+    Description: AWS Lambda region
+    Default: us-east-1
+
+Conditions:
+  HasPostgreSQLHost: !Not [!Equals [!Ref PostgreSQLHost, ""]]
+
 Resources:
   # VPC
   MyVPC:
@@ -79,7 +109,7 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
         S3Bucket: lambda-deployment-565393029483-us-east-1
-        S3Key: lambda-function.zip
+        S3Key: !Ref S3Key
       Runtime: dotnet8
       Timeout: 30
       MemorySize: 512
@@ -92,11 +122,11 @@ Resources:
       Environment:
         Variables:
           USE_SSM: 'false'
-          POSTGRESQL_HOST: !GetAtt MyRDSInstance.Endpoint.Address
-          POSTGRESQL_DATABASE: postgres
-          POSTGRESQL_USERNAME: masteruser
-          POSTGRESQL_PASSWORD: Password2123
-          AWS_LAMBDA_REGION: !Ref AWS::Region
+          POSTGRESQL_HOST: !If [HasPostgreSQLHost, !Ref PostgreSQLHost, !GetAtt MyRDSInstance.Endpoint.Address]
+          POSTGRESQL_DATABASE: !Ref PostgreSQLDatabase
+          POSTGRESQL_USERNAME: !Ref PostgreSQLUsername
+          POSTGRESQL_PASSWORD: !Ref PostgreSQLPassword
+          AWS_LAMBDA_REGION: !Ref AWSLambdaRegion
   # RDS Subnet Group
   MyDBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup

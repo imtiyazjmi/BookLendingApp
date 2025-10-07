@@ -35,57 +35,29 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Change to your region
-
-      - name: Deploy Infrastructure
-        run: |
-          aws cloudformation deploy \
-            --template-file deployment/minimal-infrastructure.yaml \
-            --stack-name BookLendingInfrastructure \
-            --capabilities CAPABILITY_IAM
-
+      
       - name: Upload to S3
         run: aws s3 cp deployment/$LAMBDA_ZIP s3://lambda-deployment-565393029483-us-east-1/$LAMBDA_ZIP
 
-      - name: Get Lambda Function Name
-        run: |
-          echo "Checking CloudFormation stack outputs..."
-          aws cloudformation describe-stacks --stack-name BookLendingInfrastructure --query 'Stacks[0].Outputs'
-          
-          LAMBDA_FUNCTION_NAME=$(aws cloudformation describe-stacks \
-            --stack-name BookLendingInfrastructure \
-            --query 'Stacks[0].Outputs[?OutputKey==`LambdaFunctionName`].OutputValue' \
-            --output text)
-          
-          echo "Retrieved Lambda Function Name: $LAMBDA_FUNCTION_NAME"
-          
-          if [ "$LAMBDA_FUNCTION_NAME" = "None" ] || [ -z "$LAMBDA_FUNCTION_NAME" ]; then
-            echo "Lambda function name not found in outputs, using direct resource name"
-            LAMBDA_FUNCTION_NAME="BookLendingLambda"
-          fi
-          
-          echo "LAMBDA_FUNCTION_NAME=$LAMBDA_FUNCTION_NAME" >> $GITHUB_ENV
-          echo "Final Lambda Function Name: $LAMBDA_FUNCTION_NAME"
-
-      - name: Get Infrastructure Outputs and Deploy Lambda
+      - name: Deploy Infrastructure
         run: |
           RDS_ENDPOINT=$(aws cloudformation describe-stacks \
             --stack-name BookLendingInfrastructure \
             --query 'Stacks[0].Outputs[?OutputKey==`RDSEndpoint`].OutputValue' \
-            --output text)
+            --output text 2>/dev/null || echo "")
           
-          aws lambda update-function-code \
-            --function-name $LAMBDA_FUNCTION_NAME \
-            --s3-bucket lambda-deployment-565393029483-us-east-1 \
-            --s3-key $LAMBDA_ZIP
-          
-          aws lambda wait function-updated --function-name $LAMBDA_FUNCTION_NAME
-          
-          aws lambda update-function-configuration \
-            --function-name $LAMBDA_FUNCTION_NAME \
-            --handler "BookLendingApp::BookLendingApp.LambdaEntryPoint::FunctionHandlerAsync" \
-            --environment Variables='{USE_SSM=false,POSTGRESQL_HOST='$RDS_ENDPOINT',POSTGRESQL_DATABASE=postgres,POSTGRESQL_USERNAME=masteruser,POSTGRESQL_PASSWORD=Password2123,AWS_LAMBDA_REGION=us-east-1}' \
-            --timeout 30
-
+          aws cloudformation deploy \
+            --template-file deployment/minimal-infrastructure.yaml \
+            --stack-name BookLendingInfrastructure \
+            --parameter-overrides \
+              S3Key=$LAMBDA_ZIP \
+              PostgreSQLHost="$RDS_ENDPOINT" \
+              PostgreSQLDatabase=postgres \
+              PostgreSQLUsername=masteruser \
+              PostgreSQLPassword=Password2123 \
+              AWSLambdaRegion=us-east-1 \
+            --capabilities CAPABILITY_IAM
+            
       - name: Deploy API Gateway
         run: |
           aws cloudformation deploy \
