@@ -37,23 +37,33 @@ BookLendingApp/
 │   │   ├── BookContext.cs         # EF Core context
 │   │   └── DatabaseSettings.cs    # Configuration models
 │   ├── Migrations/                # EF Core migrations
+│   │   ├── 20250924171454_InitialCreate.cs
+│   │   ├── 20250924173959_AddUniqueISBN.cs
+│   │   └── BookContextModelSnapshot.cs
+│   ├── Properties/                # Launch configuration
+│   │   └── launchSettings.json    # Development settings
 │   ├── Program.cs                 # Application entry point
-│   └── LambdaEntryPoint.cs        # AWS Lambda entry point
+│   ├── LambdaEntryPoint.cs        # AWS Lambda entry point
+│   ├── BookLendingApp.csproj      # Project file
+│   └── appsettings.json           # Configuration
 ├── test/                          # Unit tests (51 tests, 86.2% coverage)
 │   ├── Controllers/               # Controller tests
 │   ├── Services/                  # Service tests
 │   ├── Repositories/              # Repository tests
 │   ├── Models/                    # Model tests
 │   ├── Data/                      # Data layer tests
+│   ├── Integration/               # Integration tests
+│   ├── BookLendingApp.Tests.csproj # Test project file
 │   └── coverlet.runsettings       # Coverage configuration
 ├── deployment/                    # AWS deployment files
 │   ├── minimal-infrastructure.yaml # CloudFormation template
 │   ├── api-gateway.yaml          # API Gateway configuration
-│   ├── swagger.json               # OpenAPI specification
-│   └── swagger.yaml               # OpenAPI specification (YAML)
+│   ├── swagger.json               # OpenAPI specification (JSON)
+│   └── aws-lambda-tools-defaults.json # Lambda deployment config
 ├── .github/workflows/             # CI/CD pipeline
 │   └── deploy.yml                 # GitHub Actions workflow
-└── README.md
+├── BookLendingApp.sln             # Solution file
+└── README.md                      # Project documentation
 ```
 
 ## 🔗 API Endpoints
@@ -100,7 +110,7 @@ AWS_LAMBDA_REGION=us-east-1
 cd src
 dotnet run
 # Uses in-memory database automatically
-# API available at http://localhost:5000
+# API available at http://localhost:5000/swagger
 ```
 
 ### Unit Tests with Coverage
@@ -226,8 +236,8 @@ All endpoints return standardized JSON responses:
 
 ### Swagger/OpenAPI
 - **JSON**: `deployment/swagger.json`
-- **YAML**: `deployment/swagger.yaml`
 - **Import to AWS API Gateway**: Ready for direct import
+- **Interactive UI**: Available at `/swagger` endpoint during development
 
 ### Key Features
 - Complete schema definitions

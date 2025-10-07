@@ -6,12 +6,18 @@
         <Configuration>
           <Format>cobertura</Format>
           <ExcludeByAttribute>ExcludeFromCodeCoverage</ExcludeByAttribute>
-          <Exclude>[*]*Migrations*</Exclude>
-          <Exclude>[*]*Program*</Exclude>
-          <Exclude>[*]*Startup*</Exclude>
-          <Exclude>[*]*LambdaEntryPoint*</Exclude>
-          <Exclude>[*]*DatabaseConfigurationService*</Exclude>
-          <Exclude>[*]*ParameterStoreService*</Exclude>
+          <Exclude>[BookLendingApp]*Migrations*</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Program</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Startup</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.LambdaEntryPoint</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Services.DatabaseConfigurationService</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Services.ParameterStoreService</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Data.AwsSettings</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Data.PostgreSqlSettings</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Data.SsmSettings</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Migrations.AddUniqueISBN</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Migrations.BookContextModelSnapshot</Exclude>
+          <Exclude>[BookLendingApp]BookLendingApp.Migrations.InitialCreate</Exclude>
         </Configuration>
       </DataCollector>
     </DataCollectors>

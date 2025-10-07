@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://api.booklending.com",
+      "url": "http://api.booklending.com",
       "description": "Production server"
     }
   ],

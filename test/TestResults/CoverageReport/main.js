@@ -213,12 +213,12 @@ var assemblies = [
   {
     "name": "BookLendingApp",
     "classes": [
-      { "name": "BookLendingApp.Controllers.BooksController", "rp": "BookLendingApp_BooksController.html", "cl": 42, "ucl": 11, "cal": 53, "tl": 97, "cb": 5, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "BookLendingApp.Controllers.BooksController", "rp": "BookLendingApp_BooksController.html", "cl": 42, "ucl": 11, "cal": 53, "tl": 147, "cb": 5, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BookLendingApp.Data.BookContext", "rp": "BookLendingApp_BookContext.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BookLendingApp.Models.ApiResponse<T>", "rp": "BookLendingApp_ApiResponse_1.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BookLendingApp.Repositories.BookRepository", "rp": "BookLendingApp_BookRepository.html", "cl": 34, "ucl": 0, "cal": 34, "tl": 60, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BookLendingApp.Services.BookService", "rp": "BookLendingApp_BookService.html", "cl": 31, "ucl": 13, "cal": 44, "tl": 71, "cb": 8, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "BookStore.Models.Book", "rp": "BookLendingApp_Book.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "BookStore.Models.Book", "rp": "BookLendingApp_Book.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 52, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 

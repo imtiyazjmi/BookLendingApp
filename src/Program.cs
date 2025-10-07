@@ -131,6 +131,15 @@ public class Startup
                 c.RoutePrefix = "swagger";
             });
         }
+        else
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Book Lending API v1");
+                c.RoutePrefix = "swagger";
+            });
+        }
 
         // Apply migrations on startup (skip for in-memory database)
         using (var scope = app.ApplicationServices.CreateScope())
