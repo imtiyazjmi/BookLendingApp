@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "aaa71e16-6480-4692-977c-337fc68a9657",
+		"name": "Book Lending App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2524236"
+	},
+	"item": [
+		{
+			"name": "BookLendingApp",
+			"item": [
+				{
+					"name": "/api/books",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"The Alchemist 1\",\r\n    \"author\": \"Paulo Coelho1 \",\r\n    \"publisher\": \"HarperCollins\",\r\n    \"isbn\": \"ISN-237654341-a\",\r\n    \"pages\": 110,\r\n    \"unitsAvailable\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/books",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/books",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/api/books",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/books/1/checkout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/books/5/checkout",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"5",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/books/2/return",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/api/books/5/return",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"5",
+								"return"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

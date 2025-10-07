@@ -113,6 +113,13 @@ dotnet run
 # API available at http://localhost:5000/swagger
 ```
 
+### Server Development
+```bash
+
+# Deployed on AWS with API Gateway URL
+# API available at https://tt7r6npxqh.execute-api.us-east-1.amazonaws.com/prod
+# Location of Postman Collection .NET APIs.postman_collection.json at root
+
 ### Unit Tests with Coverage
 ```bash
 cd test
